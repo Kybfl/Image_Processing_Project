@@ -1,5 +1,5 @@
 function cikti = KKernelUygulama(giris, kernel)
-    % Bu fonksiyon, verilen gri görüntüye verilen kernel ile sıfır dolgulu konvolüsyon uygular.
+    % verilen gri görüntüye verilen kernel ile sıfır dolgulu konvolüsyon uygular.
 
     [resim_satir, resim_sutun] = size(giris);
     [kernel_satir, kernel_sutun] = size(kernel);

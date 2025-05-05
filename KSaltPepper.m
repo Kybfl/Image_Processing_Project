@@ -14,7 +14,8 @@ function saltpepper_resim = KSaltPepper(orijinal_resim, yogunluk)
 
     % Çıkış görüntüsünü başlat
     saltpepper_resim = gri_resim;
-
+    
+    %random permütasyon yaptırıp siyah ve beyaz piksellerin yerini belirle
     tuz = randperm(sat * sut, round(gurultu_pikselleri/2));
     saltpepper_resim(tuz) = 1; %beyaz
 

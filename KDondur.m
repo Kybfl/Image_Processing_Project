@@ -34,7 +34,7 @@ function [donmus_img] = KDondur(orijinal_resim, dondurme_acisi)
         yeni_koordinatlar(2,:) = yeni_koordinatlar(2,:) + (1 - min_y);
     end
 
-    % Yeni görüntü boyutu belirle
+    % Yeni görüntü boyutu 
     max_x = max(yeni_koordinatlar(1,:));
     max_y = max(yeni_koordinatlar(2,:));
     donmus_img = zeros(max_x, max_y, kanal);

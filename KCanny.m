@@ -10,7 +10,7 @@ function kenarlar = KCanny(orijinal_resim, altesik, ustesik, gauss_boyut, gauss_
     X = [-1 0 1; -2 0 2; -1 0 1];
     Y = [1 2 1; 0 0 0; -1 -2 -1];
 
-    % Gradyan hesaplama
+    % Gradyan (paraklığın hızla değiştiği yerler) hesaplama
     X = KKernelUygulama(filtreli, X);  % X yönündeki gradyanı hesapla
     Y = KKernelUygulama(filtreli, Y);  % Y yönündeki gradyanı hesapla
 
@@ -18,7 +18,7 @@ function kenarlar = KCanny(orijinal_resim, altesik, ustesik, gauss_boyut, gauss_
     gradMag = sqrt(X.^2 + Y.^2);
     gradDir = atan2(Y, X);       % gradyanın yönü
     gradDir = rad2deg(gradDir);  % derece cinsine çeviriyoz
-    gradDir(gradDir < 0) = gradDir(gradDir < 0) + 180;  % negatif açılara 100 ekle
+    gradDir(gradDir < 0) = gradDir(gradDir < 0) + 180;  % negatif açılara 180 ekle
 
     [sat, sut] = size(gradMag);
     NMS = zeros(sat, sut);  % Non-maximum suppression sonucu
@@ -30,19 +30,22 @@ function kenarlar = KCanny(orijinal_resim, altesik, ustesik, gauss_boyut, gauss_
             deg = gradDir(i,j);
 
             if ((deg >= 0 && deg < 22.5) || (deg >= 157.5 && deg <= 180))
-                a = gradMag(i, j+1);
+                a = gradMag(i, j+1);  %Gradyan yönü yataysa sağ ve sol piksellerle karşılaştır
                 b = gradMag(i, j-1);
             elseif (deg >= 22.5 && deg < 67.5)
-                a = gradMag(i-1, j+1);
+                a = gradMag(i-1, j+1); % Gradyan yönü +45 se çapraz komşular
                 b = gradMag(i+1, j-1);
             elseif (deg >= 67.5 && deg < 112.5)
-                a = gradMag(i-1, j);
+                a = gradMag(i-1, j); % Gradyan yönü dikeyse üst ve alt komşular
                 b = gradMag(i+1, j);
             elseif (deg >= 112.5 && deg < 157.5)
-                a = gradMag(i-1, j-1);
+                a = gradMag(i-1, j-1);% Gradyan yönü -45 se çapraz komşular
                 b = gradMag(i+1, j+1);
             end
-
+            
+            % Eğer i j deki gradyan değeri iki komşudan da
+            %büyükse Kenar noktası tutulur değşilse
+            % kenarlarda maksimum değildir  0 yapılır.
             if gradMag(i,j) >= a && gradMag(i,j) >= b
                 NMS(i,j) = gradMag(i,j);
             else
@@ -51,7 +54,7 @@ function kenarlar = KCanny(orijinal_resim, altesik, ustesik, gauss_boyut, gauss_
         end
     end
 
-    % Çift eşikleme (KCiftEsikleme kullanılmamasının nedeni KCiftEsikleme nin resim döndürmesidir)
+    % Çift eşikleme (KCiftEsikleme kullanılmamasının nedeni resim döndürmesidir)
     kenar_zayif = (NMS >= altesik) & (NMS < ustesik);
     kenar_guclu = (NMS >= ustesik);
 

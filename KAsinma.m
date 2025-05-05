@@ -2,9 +2,10 @@ function cikti = KAsinma(orijinal_resim, boyut)
    %sadece birlerden oluşan bir matrisle işleme sokulur
     yapiElemani = ones(boyut);
     gri_resim = KGriDonusum(orijinal_resim);
+
     [sat, sut] = size(gri_resim);
-    [kSat, kSut] = size(yapiElemani);
-    pad = floor([kSat, kSut] / 2);
+    [kSat, kSut] = size(yapiElemani); 
+    pad = floor([kSat, kSut] / 2); % resim etrafına ne kadar padding yapılcağının hesabı
 
     genis = KZeroPad(gri_resim, pad);
     cikti = zeros(sat, sut);
